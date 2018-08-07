@@ -31,15 +31,27 @@ class LeaguesApi():
 
 class MatchesApi():
 
-    def get_matchlist_by_account_id(self, account_id, begin_index, region, api_key):
-        url = 'https://' + region + '.api.riotgames.com/lol/match/v3/matchlists/by-account/' + \
-              str(account_id)+ '?beginIndex=' + str(begin_index) + '&api_key=' + api_key
+    def get_matchlist_by_account_id(self, account_id, begin_index, region, api_key, end_index = 0):
+        if end_index == 0:
+            url = 'https://' + region + '.api.riotgames.com/lol/match/v3/matchlists/by-account/' + \
+                  str(account_id)+ '?beginIndex=' + str(begin_index) + '&api_key=' + api_key
+        else:
+            url = 'https://' + region + '.api.riotgames.com/lol/match/v3/matchlists/by-account/' + \
+                  str(account_id) + '?beginIndex=' + str(begin_index) + '&endIndex='+str(end_index)+\
+                  '&api_key=' + api_key
         r = requests.get(url)
         return r.json()
     def get_match_by_game_id(self,game_id,region, api_key):
         url = 'https://' + region + '.api.riotgames.com/lol/match/v3/matches/' + \
               str(game_id) + '?api_key=' + api_key
         r = requests.get(url)
+        return r.json()
+
+    def get_timeline_by_game_id(self,game_id,region,api_key):
+        url = 'https://' + region + '.api.riotgames.com/lol/match/v3/timelines/by-match/' + \
+              str(game_id) + '?api_key=' + api_key
+        r = requests.get(url)
+
         return r.json()
 
 class SpectatorApi():

@@ -1,10 +1,15 @@
 from api.ApiConnector import ApiConnector
 import json
 
-connector = ApiConnector('la2','RGAPI-4cd8dfe2-215d-48f4-8500-2047e1e26ded')
+with open('api/config.json') as json_data_file:
+    config = json.load(json_data_file)
+print(config)
+
+connector = ApiConnector(config['RIOT']['REGION'],config['RIOT']['API-KEY'])
+
 
 ouput_dir = 'D:/Documents/Coding/loltips/data/outputs/sample_full_games/'
-game_id= 290371794
+game_id= 603569718
 
 full_game = connector.get_match_by_game_id(game_id)
 file = open(ouput_dir+str(game_id)+'_full_game.json','w')

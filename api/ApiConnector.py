@@ -28,13 +28,38 @@ class ApiConnector():
             return summoner
 
     def get_matchlist_by_account_id(self, account_id):
+        # Este método debería ir paginando y devolver una lista con todos los matches existentes. No me gusta mucho
+        # como pagina ni lo que devuelve. Como la información de mas de 2000 games no es tan útil, recomiendo usar el
+        # método de abajo especificando la cantidad de games que se quieren traer.
+
+        #Edit: Creo que anda bastante para el culo. Ver denuevo.
+
         begin_index = 0
         matchlist = self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key)
-        print(matchlist)
-        while begin_index+100 < matchlist['totalGames']:
+        matches = matchlist['matches']
+
+        while matchlist['endIndex'] < matchlist['totalGames']:
+            if begin_index+100 < matchlist['totalGames']:
+                matchlist = self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region,
+                                                                    self._api_key)
+                matches += matchlist['matches']
+            else:
+                matchlist = self._matches_api.get_matchlist_by_account_id(account_id,
+                                                                     begin_index,
+                                                                     self._region, self._api_key,
+                                                                     end_index = matchlist['totalGames'])
+                matches += matchlist['matches']
+
             begin_index = matchlist['endIndex'] + 1
-            matchlist = self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key)
-            print(matchlist)
+        return matches
+
+    def get_last_games_by_account_id(self,account_id, n_games=20):
+        begin_index = 0
+        if n_games < 100:
+            return self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
+                                                                 n_games)['matches']
+        else:
+            print("MAX 100 GAMES.")
 
 
     # ------ Matches related functions ------
@@ -44,3 +69,6 @@ class ApiConnector():
     def get_active_game_by_summoner_id(self,summoner_id):
         print(summoner_id)
         return self._spectator_api.get_active_game_by_summoner_id(summoner_id, self._region, self._api_key)
+
+    def get_timeline_by_game_id(self, game_id):
+        return self._matches_api.get_timeline_by_game_id(game_id, self._region, self._api_key)
