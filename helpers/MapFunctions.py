@@ -26,7 +26,7 @@ class MapFunctions:
         :param y:
         :return: Sector where x,y coordinates are located.
         """
-
+        res = ''
         point = Point(x,y)
         for sector in self._map:
             if self._map[sector].contains(point):

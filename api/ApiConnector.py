@@ -61,6 +61,19 @@ class ApiConnector():
         else:
             print("MAX 100 GAMES.")
 
+    def get_last_games_by_account_id_for_lane(self, account_id, lane, n_games=50):
+        begin_index = 0
+        if n_games < 100:
+
+            matchlist =  self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
+                                                                 n_games)
+            matches = []
+            for game in matchlist['matches']:
+                if game['lane'] == lane:
+                    matches.append(game)
+            return matches
+        else:
+            print("MAX 100 GAMES.")
 
     # ------ Matches related functions ------
     def get_match_by_game_id(self,game_id):
