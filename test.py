@@ -1,15 +1,21 @@
 from api.ApiConnector import ApiConnector
+from helpers.PlayerBehavior import PlayerBehavior
+from helpers.MapFunctions import MapFunctions
 import json, pprint
 
-connector = ApiConnector('la2','RGAPI-fa217bbb-2ae1-4869-b368-0bc4cb4576af')
+behavior_helper = PlayerBehavior()
+map_helper = MapFunctions()
+
+with open('api/config.json') as json_data_file:
+    config = json.load(json_data_file)
+print(config)
+
+connector = ApiConnector(config['RIOT']['REGION'],config['RIOT']['API-KEY'])
 
 ouput_dir = 'D:/Documents/Coding/loltips/data/outputs/sample_full_games/'
 
-with open(ouput_dir+'/290371794_full_game.json') as f:
+with open(ouput_dir+'/603569718_full_game.json') as f:
     data = json.load(f)
 
 
-for participant in data['participants']:
-    print(json.dumps(participant, indent=4, sort_keys=True))
-
-
+roamer = behavior_helper.is_roamer(connector,data,'Gonzus')
