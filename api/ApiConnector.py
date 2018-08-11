@@ -19,12 +19,10 @@ class ApiConnector():
     def get_summoner_by_name(self, summoner_name):
         summoner = self._db_connector.get_summoner_by_name('summoners',summoner_name)
         if summoner:
-            print('Got summoner from db')
             return summoner
         else:
             summoner = self._summoner_api.get_summoner_by_name(summoner_name, self._region, self._api_key)
             self._db_connector.save_summoner('summoners',summoner)
-            print('Queried Riot for summoner')
             return summoner
 
     def get_matchlist_by_account_id(self, account_id):
@@ -53,7 +51,7 @@ class ApiConnector():
             begin_index = matchlist['endIndex'] + 1
         return matches
 
-    def get_last_games_by_account_id(self,account_id, n_games=20):
+    def get_last_games_by_account_id(self,account_id, n_games=50):
         begin_index = 0
         if n_games < 100:
             return self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
@@ -77,11 +75,23 @@ class ApiConnector():
 
     # ------ Matches related functions ------
     def get_match_by_game_id(self,game_id):
-        return self._matches_api.get_match_by_game_id(game_id,self._region,self._api_key)
+        game = self._db_connector.get_game_by_game_id('matches', game_id)
+        if game:
+            return game
+        else:
+            game = self._matches_api.get_match_by_game_id(game_id,self._region,self._api_key)
+            self._db_connector.save_game('matches', game)
+            return game
 
     def get_active_game_by_summoner_id(self,summoner_id):
         print(summoner_id)
         return self._spectator_api.get_active_game_by_summoner_id(summoner_id, self._region, self._api_key)
 
     def get_timeline_by_game_id(self, game_id):
-        return self._matches_api.get_timeline_by_game_id(game_id, self._region, self._api_key)
+        timeline = self._db_connector.get_timeline_by_game_id('timelines', game_id)
+        if timeline:
+            return timeline
+        else:
+            timeline = self._matches_api.get_timeline_by_game_id(game_id, self._region, self._api_key)
+            self._db_connector.save_timeline('timelines', timeline, game_id)
+            return timeline

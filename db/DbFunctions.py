@@ -23,6 +23,10 @@ class MongoConnector:
         collection = self._db[collection_name]
         return collection.find_one({'gameId':game_id})
 
+    def save_game(self, collection_name, game):
+        collection = self._db[collection_name]
+        collection.insert_one(game)
+
     def get_summoner_by_name(self, collection_name, summoner_name):
         collection = self._db[collection_name]
         return collection.find_one({'name':summoner_name})
@@ -33,3 +37,16 @@ class MongoConnector:
 
     def save_champion_list(self, collection_name, champion_list):
         self.insert_many(collection_name, champion_list)
+
+    def get_champion_by_id(self, collection_name, champion_id):
+        collection = self._db[collection_name]
+        return collection.find_one({'key':str(champion_id)})
+
+    def get_timeline_by_game_id(self,collection_name, game_id):
+        collection = self._db[collection_name]
+        return collection.find_one({'gameId':game_id})
+
+    def save_timeline(self, collection_name, timeline, game_id):
+        collection = self._db[collection_name]
+        timeline['gameId'] = game_id
+        collection.insert_one(timeline)

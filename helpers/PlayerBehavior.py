@@ -1,4 +1,5 @@
 from helpers.MapFunctions import MapFunctions
+import time
 class PlayerBehavior:
 
     def __init__(self):
@@ -17,7 +18,9 @@ class PlayerBehavior:
 
         summoner = game['participants'][participant_id-1]
         summoner_lane = summoner['timeline']['lane']
+
         if summoner_lane != 'JUNGLE':
+
             timeline = connector.get_timeline_by_game_id(game['gameId'])
             for frame in timeline['frames']:
                 events = frame['events']
