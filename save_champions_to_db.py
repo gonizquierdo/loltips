@@ -12,4 +12,4 @@ champion_list = []
 for champion in champions['data']:
     champion_list.append(champions['data'][champion])
 
-db_connector.('champions', champion_list)save_champion_list
+db_connector.save_champion_list('champions', champion_list)
