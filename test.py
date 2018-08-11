@@ -12,7 +12,7 @@ print(config)
 
 connector = ApiConnector(config['RIOT']['REGION'],config['RIOT']['API-KEY'])
 
-ouput_dir = 'D:/Documents/Coding/loltips/data/outputs/sample_full_games/'
+ouput_dir = config['ROOT_DIR']+'/data/outputs/sample_full_games/'
 
 with open(ouput_dir+'/603569718_full_game.json') as f:
     data = json.load(f)

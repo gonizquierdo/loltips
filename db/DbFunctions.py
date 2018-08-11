@@ -10,6 +10,10 @@ class MongoConnector:
         collection = self._db[collection_name]
         collection.insert_one(document)
 
+    def insert_many(self, collection_name, documents):
+        collection = self._db[collection_name]
+        collection.insert_many(documents)
+
     def get_document_by_id(self, collection_name, document_id):
         collection = self._db[collection_name]
         return collection.find_one(document_id)
@@ -26,3 +30,6 @@ class MongoConnector:
     def save_summoner(self, collection_name, summoner):
         collection = self._db[collection_name]
         collection.insert_one(summoner)
+
+    def save_champion_list(self, collection_name, champion_list):
+        self.insert_many(collection_name, champion_list)

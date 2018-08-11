@@ -2,3 +2,5 @@ datadragon
 .idea/*
 data
 /credentials
+*.pyc
+__pycache__

@@ -2,8 +2,13 @@ from api.ApiConnector import ApiConnector
 from helpers.PlayerBehavior import PlayerBehavior
 import json
 
+def champion_name(champions, key):
+    print(key)
+
 with open('api/config.json') as json_data_file:
     config = json.load(json_data_file)
+
+
 
 connector = ApiConnector(config['RIOT']['REGION'],config['RIOT']['API-KEY'])
 behavior_helper = PlayerBehavior()
@@ -16,7 +21,7 @@ print(summoner)
 gamelist = connector.get_last_games_by_account_id_for_lane(summoner['accountId'], summoner_lane)
 game_count = 0
 for game in gamelist:
-    print(game)
+    print('Champ: '+ champion_name(champions,game['champion']))
     full_game = connector.get_match_by_game_id(game['gameId'])
     if behavior_helper.is_roamer(connector,full_game,summoner_name):
         game_count += 1
