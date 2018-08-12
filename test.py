@@ -12,10 +12,11 @@ print(config)
 
 connector = ApiConnector(config['RIOT']['REGION'],config['RIOT']['API-KEY'])
 
-ouput_dir = config['ROOT_DIR']+'/data/outputs/sample_full_games/'
+summoner_name = 'WatchLeo'
+summoner = connector.get_summoner_by_name(summoner_name)
 
-with open(ouput_dir+'/603569718_full_game.json') as f:
-    data = json.load(f)
+active_game = connector.get_active_game_by_summoner_id(summoner['id'])
 
-
-roamer = behavior_helper.is_roamer(connector,data,'Gonzus')
+for summoner in active_game['participants']:
+    behavior_helper.get_roamer_for_last_games(connector,summoner['summonerName'])
+print(active_game)

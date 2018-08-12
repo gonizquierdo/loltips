@@ -33,3 +33,14 @@ class PlayerBehavior:
                             roamer = True
                             break
         return roamer
+
+    def get_roamer_for_last_games(self, connector, summoner_name):
+        summoner = connector.get_summoner_by_name(summoner_name)
+        gamelist = connector.get_last_games_by_account_id(summoner['accountId'])
+        count = 0
+        for game in gamelist:
+            full_game = connector.get_match_by_game_id(game['gameId'])
+            if self.is_roamer(connector,full_game, summoner_name):
+                count += 1
+
+        return len(gamelist), count

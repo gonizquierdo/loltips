@@ -3,7 +3,7 @@ from pymongo import MongoClient
 class MongoConnector:
 
     def __init__(self):
-        self._client = MongoClient('mongodb://localhost:27017/')
+        self._client = MongoClient('mongodb://192.168.0.9:27017/')
         self._db = self._client['lol-tips']
 
     def insert_one(self, collection_name, document):

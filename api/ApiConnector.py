@@ -51,7 +51,7 @@ class ApiConnector():
             begin_index = matchlist['endIndex'] + 1
         return matches
 
-    def get_last_games_by_account_id(self,account_id, n_games=50):
+    def get_last_games_by_account_id(self,account_id, n_games=20):
         begin_index = 0
         if n_games < 100:
             return self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
