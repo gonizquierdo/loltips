@@ -1,61 +1,32 @@
 import requests
-from api.ApiV3 import SummonerApi, MatchesApi, LeaguesApi, SpectatorApi
+from riotwatcher import RiotWatcher
 from db.DbFunctions import MongoConnector
 
 class ApiConnector():
 
     def __init__(self, region, api_key):
         self._db_connector = MongoConnector()
-        self._api_key = api_key
         self._region = region
-        self._initialize_apis()
-
-    def _initialize_apis(self):
-        self._summoner_api = SummonerApi()
-        self._matches_api = MatchesApi()
-        self._spectator_api = SpectatorApi()
+        self._watcher = RiotWatcher(api_key)
 
     # ------ Summoner related functions ------
     def get_summoner_by_name(self, summoner_name):
         summoner = self._db_connector.get_summoner_by_name('summoners',summoner_name)
         if summoner:
-            return summoner
+            source = 'db'
+
         else:
-            summoner = self._summoner_api.get_summoner_by_name(summoner_name, self._region, self._api_key)
+            summoner = self._watcher.summoner.by_name(self._region, summoner_name)
             self._db_connector.save_summoner('summoners',summoner)
-            return summoner
+            source = 'api'
+        return summoner, source
 
-    def get_matchlist_by_account_id(self, account_id):
-        # Este método debería ir paginando y devolver una lista con todos los matches existentes. No me gusta mucho
-        # como pagina ni lo que devuelve. Como la información de mas de 2000 games no es tan útil, recomiendo usar el
-        # método de abajo especificando la cantidad de games que se quieren traer.
 
-        #Edit: Creo que anda bastante para el culo. Ver denuevo.
-
+    def get_last_games_by_account_id(self,account_id, n_games=50):
         begin_index = 0
-        matchlist = self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key)
-        matches = matchlist['matches']
 
-        while matchlist['endIndex'] < matchlist['totalGames']:
-            if begin_index+100 < matchlist['totalGames']:
-                matchlist = self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region,
-                                                                    self._api_key)
-                matches += matchlist['matches']
-            else:
-                matchlist = self._matches_api.get_matchlist_by_account_id(account_id,
-                                                                     begin_index,
-                                                                     self._region, self._api_key,
-                                                                     end_index = matchlist['totalGames'])
-                matches += matchlist['matches']
-
-            begin_index = matchlist['endIndex'] + 1
-        return matches
-
-    def get_last_games_by_account_id(self,account_id, n_games=20):
-        begin_index = 0
         if n_games < 100:
-            return self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
-                                                                 n_games)['matches']
+            return self._watcher.match.matchlist_by_account(self._region, account_id, end_index=n_games)['matches']
         else:
             print("MAX 100 GAMES.")
 
@@ -63,8 +34,7 @@ class ApiConnector():
         begin_index = 0
         if n_games < 100:
 
-            matchlist =  self._matches_api.get_matchlist_by_account_id(account_id, begin_index, self._region, self._api_key,
-                                                                 n_games)
+            matchlist =  self._watcher.match.matchlist_by_account(self._region, account_id, end_index=n_games)
             matches = []
             for game in matchlist['matches']:
                 if game['lane'] == lane:
@@ -73,25 +43,34 @@ class ApiConnector():
         else:
             print("MAX 100 GAMES.")
 
+    def get_summoner_league_and_division(self,summoner_id):
+        res = self._watcher.league.positions_by_summoner(self._region, summoner_id)
+        for queue in res:
+            if queue['queueType'] == 'RANKED_SOLO_5x5':
+                tier = queue['tier']
+                rank = queue['rank']
+        return tier, rank
+
     # ------ Matches related functions ------
     def get_match_by_game_id(self,game_id):
         game = self._db_connector.get_game_by_game_id('matches', game_id)
         if game:
             return game
         else:
-            game = self._matches_api.get_match_by_game_id(game_id,self._region,self._api_key)
+            game = self._watcher.match.by_id(self._region, game_id)
             self._db_connector.save_game('matches', game)
             return game
 
     def get_active_game_by_summoner_id(self,summoner_id):
         print(summoner_id)
-        return self._spectator_api.get_active_game_by_summoner_id(summoner_id, self._region, self._api_key)
+        return self._watcher.spectator.by_summoner(self._region, summoner_id)
 
     def get_timeline_by_game_id(self, game_id):
         timeline = self._db_connector.get_timeline_by_game_id('timelines', game_id)
         if timeline:
             return timeline
         else:
-            timeline = self._matches_api.get_timeline_by_game_id(game_id, self._region, self._api_key)
+            timeline = self._watcher.match.timeline_by_match(self._region, game_id)
             self._db_connector.save_timeline('timelines', timeline, game_id)
             return timeline
+

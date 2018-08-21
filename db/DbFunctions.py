@@ -1,9 +1,13 @@
 from pymongo import MongoClient
+import json
 
 class MongoConnector:
 
     def __init__(self):
-        self._client = MongoClient('mongodb://192.168.0.9:27017/')
+        with open('api/config.json') as json_data_file:
+            config = json.load(json_data_file)
+
+        self._client = MongoClient('mongodb://{}:27017/'.format(config['SERVER']['IP']))
         self._db = self._client['lol-tips']
 
     def insert_one(self, collection_name, document):

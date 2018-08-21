@@ -1,7 +1,11 @@
 {
   "RIOT":{
-    "API-KEY": "RGAPI-06e4fc4e-7fb0-4a2b-a5be-14738a5527ec",
+    "API-KEY": "RGAPI-5913033f-6492-4196-8ccf-1e012fe9dcc6",
     "REGION": "la2"
   },
-  "ROOT_DIR": "D:/Documents/Coding/loltips"
+  "ROOT_DIR": "D:/Documents/Coding/loltips",
+  "SERVER":{
+    "IP": "192.168.0.4",
+    "PORT": 80
+  }
 }
