@@ -3,8 +3,7 @@ from flask_cors import CORS
 
 from api.ApiConnector import ApiConnector
 from helpers.PlayerBehavior import PlayerBehavior
-from helpers.MapFunctions import MapFunctions
-import json, time
+import json, time, os
 
 app = Flask(__name__)
 
@@ -34,9 +33,8 @@ def stats_game_by_summoner_name(summoner_name):
 
 if __name__ == "__main__":
     behavior_helper = PlayerBehavior()
-    map_helper = MapFunctions()
-
-    with open('api/config.json') as json_data_file:
+    path = os.path.abspath(__file__)
+    with open(os.path.dirname(os.path.dirname(path))+'/api/config.json') as json_data_file:
         config = json.load(json_data_file)
 
     connector = ApiConnector(config['RIOT']['REGION'], config['RIOT']['API-KEY'])

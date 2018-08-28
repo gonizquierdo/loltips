@@ -1,4 +1,3 @@
-from helpers.MapFunctions import MapFunctions
 import helpers.PlayerData as player_data
 import json
 
@@ -6,14 +5,12 @@ import json
 class PlayerBehavior:
 
     def __init__(self):
-        self._map_helper = MapFunctions()
+        #self._map_helper = MapFunctions()
+        pass
 
-    def is_roamer(self, connector, game, summoner_name):
-        """
-        :param game: Full Game
-        :param summoner_name: Summoner Name
-        :return: True if summoner killed or assisted while roaming.
-        """
+    """
+      def is_roamer(self, connector, game, summoner_name):
+      
         roamer = False
         for participant_identity in game['participantIdentities']:
             if participant_identity['player']['summonerName'] == summoner_name:
@@ -50,6 +47,7 @@ class PlayerBehavior:
                 count += 1
 
         return len(gamelist), count
+    """
 
     def get_stats_for_matchlist(self, connector, summoner, gamelist):
         stats = {}
