@@ -6,6 +6,8 @@ from helpers.PlayerBehavior import PlayerBehavior
 import json, time, os
 
 app = Flask(__name__)
+CORS(app)
+
 behavior_helper = PlayerBehavior()
 with open('api/config.json') as json_data_file:
     config = json.load(json_data_file)
@@ -37,5 +39,4 @@ def stats_game_by_summoner_name(summoner_name):
 
 
 if __name__ == "__main__":
-    CORS(app)
     app.run()
