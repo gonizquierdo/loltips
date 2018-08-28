@@ -5,7 +5,7 @@ class MongoConnector:
 
     def __init__(self):
         path = os.path.abspath(__file__)
-        with open(os.path.dirname(os.path.dirname(path))+'/api/config.json') as json_data_file:
+        with open('api/config.json') as json_data_file:
             config = json.load(json_data_file)
 
         self._client = MongoClient('mongodb://{}:{}@{}:{}/{}'.format(config['DB']['USER'], config['DB']['PASSWORD'],
