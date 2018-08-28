@@ -7,7 +7,9 @@ class MongoConnector:
         with open('api/config.json') as json_data_file:
             config = json.load(json_data_file)
 
-        self._client = MongoClient('mongodb://{}:27017/'.format(config['SERVER']['IP']))
+        self._client = MongoClient('mongodb://{}:{}@{}:{}/{}'.format(config['DB']['USER'], config['DB']['PASSWORD'],
+                                                                     config['DB']['HOST'], config['DB']['PORT'],
+                                                                     config['DB']['DB_NAME']))
         self._db = self._client['lol-tips']
 
     def insert_one(self, collection_name, document):

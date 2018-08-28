@@ -1,11 +1,18 @@
 {
   "RIOT":{
-    "API-KEY": "RGAPI-5913033f-6492-4196-8ccf-1e012fe9dcc6",
+    "API-KEY": "RGAPI-40356885-6c6d-4c77-9f88-1a9d9c2a3ed1",
     "REGION": "la2"
   },
   "ROOT_DIR": "D:/Documents/Coding/loltips",
   "SERVER":{
     "IP": "192.168.0.4",
     "PORT": 80
+  },
+  "DB":{
+    "USER": "gonzus",
+    "PASSWORD": "j3scu7e6",
+    "HOST": "ds137102.mlab.com",
+    "PORT": "37102",
+    "DB_NAME": "lol-tips"
   }
 }

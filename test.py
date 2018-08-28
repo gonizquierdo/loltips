@@ -11,6 +11,5 @@ with open('api/config.json') as json_data_file:
     config = json.load(json_data_file)
 
 
-watcher = RiotWatcher(config['RIOT']['API-KEY'])
-for i in range(1,200):
-    print(watcher.summoner.by_name('la2','Gonzus'))
+connector = ApiConnector('la2', config['RIOT']['API-KEY'])
+print(connector.get_summoner_by_name('Gonzus'))

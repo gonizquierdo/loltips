@@ -42,4 +42,4 @@ if __name__ == "__main__":
     connector = ApiConnector(config['RIOT']['REGION'], config['RIOT']['API-KEY'])
     CORS(app)
 
-    app.run(debug=True, host=config['SERVER']['IP'],port=config['SERVER']['PORT'])
+    app.run()
