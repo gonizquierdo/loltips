@@ -32,11 +32,12 @@ def stats_game_by_summoner_name(summoner_name):
 
     matchlist =  connector.get_last_games_by_account_id(summoner['accountId'])
     stats = behavior_helper.get_stats_for_matchlist(connector, summoner, matchlist)
+
     stats['summoner_name'] = summoner_name
+    stats['summoner_level'] = summoner['summonerLevel']
     stats['summoner_icon'] = summoner['profileIconId']
     stats['summoner_league'] = connector.get_summoner_league_and_division(summoner['id'])
     return Response(json.dumps(stats))
-
 
 if __name__ == "__main__":
     app.run()
