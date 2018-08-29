@@ -12,14 +12,10 @@ class ApiConnector():
     # ------ Summoner related functions ------
     def get_summoner_by_name(self, summoner_name):
         summoner = self._db_connector.get_summoner_by_name('summoners',summoner_name)
-        if summoner:
-            source = 'db'
-
-        else:
+        if not summoner:
             summoner = self._watcher.summoner.by_name(self._region, summoner_name)
             self._db_connector.save_summoner('summoners',summoner)
-            source = 'api'
-        return summoner, source
+        return summoner
 
 
     def get_last_games_by_account_id(self,account_id, n_games=50):
@@ -45,11 +41,15 @@ class ApiConnector():
 
     def get_summoner_league_and_division(self,summoner_id):
         res = self._watcher.league.positions_by_summoner(self._region, summoner_id)
-        for queue in res:
-            if queue['queueType'] == 'RANKED_SOLO_5x5':
-                tier = queue['tier']
-                rank = queue['rank']
-        return tier, rank
+        print(res)
+        if res:
+            for queue in res:
+                if queue['queueType'] == 'RANKED_SOLO_5x5':
+                    tier = queue['tier']
+                    rank = queue['rank']
+            return tier, rank
+        else:
+            return ["UNRANKED", "-"]
 
     # ------ Matches related functions ------
     def get_match_by_game_id(self,game_id):
