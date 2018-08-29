@@ -28,7 +28,7 @@ def active_game_by_summoner_name(summoner_name):
 
 @app.route("/stats/<summoner_name>", methods=['GET','POST'])
 def stats_game_by_summoner_name(summoner_name):
-    summoner = connector.get_summoner_by_name(summoner_name)[0]
+    summoner = connector.get_summoner_by_name(summoner_name)
 
     matchlist =  connector.get_last_games_by_account_id(summoner['accountId'])
     stats = behavior_helper.get_stats_for_matchlist(connector, summoner, matchlist)
